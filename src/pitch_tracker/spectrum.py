@@ -26,7 +26,8 @@ def interpolate_peak(values: np.ndarray, k: int) -> float:
     denominator = a - 2.0 * b + c
     if denominator == 0.0:
         return float(k)
-    return k + 0.5 * (a - c) / denominator
+    offset = 0.5 * (a - c) / denominator
+    return k + max(-0.5, min(0.5, offset))
 
 
 def peak_frequency(x: np.ndarray, fs: float, f_min: float, f_max: float) -> float:

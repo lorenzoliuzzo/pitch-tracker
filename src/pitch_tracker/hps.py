@@ -25,6 +25,6 @@ def hps_frequency(x: np.ndarray, fs: float, f_min: float, f_max: float, factors:
     harmonic = max(range(1, factors + 1), key=lambda r: magnitude[r * k0])
     centre = harmonic * k0
     k = centre - 1 + int(np.argmax(magnitude[centre - 1 : centre + 2]))
-    k = min(k, magnitude.size - 2)
+    k = min(max(k, 1), magnitude.size - 2)
     log_magnitude = np.log(magnitude + 1e-12)
     return interpolate_peak(log_magnitude, k) * fs / x.size / harmonic

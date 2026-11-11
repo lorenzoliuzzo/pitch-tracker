@@ -17,7 +17,7 @@ You need Python 3.12 and [uv](https://docs.astral.sh/uv/). A microphone is only 
 
 ```bash
 uv sync                          # create the environment and install dependencies
-uv run pytest                    # 147 tests, no microphone needed
+uv run pytest                    # 150 tests, no microphone needed
 uv run pitch-demo                # compare the three estimators on synthetic strings
 uv run pitch-record E2           # record 4 s from the microphone, plot its spectrogram
 uv run pitch-tuner               # the live tuner: pluck a string, read the note and cents
@@ -128,10 +128,11 @@ src/pitch_tracker/
   autocorr.py   FFT autocorrelation, autocorr_frequency
   synth.py      harmonic_tone: test signals with chosen harmonics, noise and decay
   demo.py       the accuracy table above (pitch-demo)
+  vectors.py    shared test vectors for the JavaScript port (pitch-vectors)
   estimators.py one place that turns a method name into an estimator function
   record.py     microphone capture and spectrogram plot (pitch-record)
   live.py       the live tuner: ring buffer, gate, smoothing, needle (pitch-tuner)
-tests/          one file per module; synthetic signals only
+tests/          one file per module; synthetic signals only; data/vectors.json is generated
 ```
 
 `record.py` and the `run` function of `live.py` are the only code that touches the microphone.
@@ -150,6 +151,18 @@ The tests assert the behaviour above rather than only checking that code runs: t
 `peak` on a weak fundamental, the failure of `hps` on a pure tone, the shrinking of the
 autocorrelation peak on a finite record, and a stress test that guards an out-of-bounds read at the
 top of the spectrum.
+
+## The browser port
+
+The same three estimators also exist in JavaScript, as `assets/js/tuner/pitch.js` in the course site
+repository, so a phone can run the tuner in Safari with nothing but a static page. Python is the
+reference: any change to an algorithm is made here first.
+
+The two stay in sync through shared test vectors. `uv run pitch-vectors` writes
+`tests/data/vectors.json` (synthetic tones and the frequency each estimator returned), a test here
+fails if the committed file is out of date, and the site's `node --test tools/tuner.test.mjs`
+checks that the JavaScript reproduces every value to within 0.01 cent. After changing an
+estimator, regenerate the vectors and copy the file to the site's `tools/tuner_vectors.json`.
 
 ## Theory
 

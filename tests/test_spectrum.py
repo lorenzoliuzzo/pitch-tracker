@@ -16,6 +16,12 @@ def test_interpolation_recovers_the_vertex_of_a_parabola() -> None:
     assert interpolate_peak(parabola, 4) == pytest.approx(4.3)
 
 
+def test_interpolation_stays_within_half_a_bin_when_the_middle_is_not_a_peak() -> None:
+    rising = np.array([0.0, 1.0, 1.1])
+    assert interpolate_peak(rising, 1) == pytest.approx(1.5)
+    assert interpolate_peak(np.array([1.1, 1.0, 0.0]), 1) == pytest.approx(0.5)
+
+
 def test_interpolation_of_a_flat_top_stays_on_the_bin() -> None:
     assert interpolate_peak(np.array([1.0, 1.0, 1.0]), 1) == 1.0
 

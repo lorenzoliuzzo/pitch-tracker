@@ -33,3 +33,4 @@ testpaths = ["tests"]
 pitch-record = "pitch_tracker.record:main"
 pitch-demo = "pitch_tracker.demo:main"
 pitch-tuner = "pitch_tracker.live:main"
+pitch-vectors = "pitch_tracker.vectors:main"

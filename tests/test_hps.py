@@ -52,4 +52,5 @@ def test_random_records_up_to_nyquist_never_index_out_of_bounds(factors: int) ->
     rng = np.random.default_rng(4)
     for _ in range(200):
         x = rng.standard_normal(254)
-        assert np.isfinite(hps_frequency(x, FS, 100.0, FS / 2.0, factors=factors))
+        f_hat = hps_frequency(x, FS, 100.0, FS / 2.0, factors=factors)
+        assert 0.0 < f_hat <= FS / 2.0
